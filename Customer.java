@@ -5,7 +5,6 @@ public class Customer {
     private String lastName;
     private int ID;
     private double amountSpent;
-    private boolean isPromoted;
 
     public Customer(int ID, String firstName, String lastName, double amountSpent) {
         this.firstName = firstName;
@@ -50,11 +49,12 @@ public class Customer {
         this.amountSpent += additionalAmountSpent;
     }
 
-    public boolean isPromoted() {
-        if (amountSpent >= 150.00) {
-            isPromoted = true;
-        }
-        return this.isPromoted;
+    public boolean isPromoted(double amountRequiredForPromotion) {
+    	if (this.amountSpent >= amountRequiredForPromotion) {
+    		return true;
+    	} else {
+    		return false;
+    	}
     }
 
     @Override

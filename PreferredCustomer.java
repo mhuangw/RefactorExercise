@@ -21,13 +21,31 @@ public class PreferredCustomer extends Customer {
     }
 
     public void updateDiscountPercentage() {
-        double spent = getAmountSpent();
-        if (spent >= 150.0 && spent < 200.0)
+        if (discountRateApplies(150.0, 200.0)) {
             setDiscountPercentage(0.05);
-        else if (spent >= 200.0 && spent < 350.0)
+        }
+        else if (discountRateApplies(200.0, 350.0)) {
             setDiscountPercentage(0.07);
-        else if(spent > 350.0)
+        }
+        else if (discountRateApplies(350.0)) {
             setDiscountPercentage(0.1);
+        }
+    }
+
+    public boolean discountRateApplies(double min, double max) {
+        if (getAmountSpent() >= min && getAmountSpent() < max) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean discountRateApplies(double min) {
+        if (getAmountSpent() >= min) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

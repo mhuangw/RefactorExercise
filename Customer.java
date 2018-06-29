@@ -46,9 +46,8 @@ public class Customer {
         this.amountSpent = amountSpent;
     }
 
-    public double updateAmountSpent(double additionalAmountSpent) {
+    public void updateAmountSpent(double additionalAmountSpent) {
         this.amountSpent += additionalAmountSpent;
-        return this.amountSpent;
     }
 
     public boolean isPromoted() {

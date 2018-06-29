@@ -1,10 +1,10 @@
 package Customer;
 
 public class Customer {
-    public String firstName;
-    public String lastName;
-    public int ID;
-    public double amountSpent;
+    private String firstName;
+    private String lastName;
+    private int ID;
+    private double amountSpent;
 
     public Customer(int ID, String firstName, String lastName, double amountSpent) {
         this.firstName = firstName;

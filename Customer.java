@@ -46,12 +46,12 @@ public class Customer {
         this.amountSpent = amountSpent;
     }
 
-    public double updateAmountSpent(double additionalAmountSpent){
+    public double updateAmountSpent(double additionalAmountSpent) {
         this.amountSpent += additionalAmountSpent;
         return this.amountSpent;
     }
 
-    public boolean isPromoted(){
+    public boolean isPromoted() {
         if (amountSpent >= 150.00) {
             isPromoted = true;
         }
@@ -59,7 +59,7 @@ public class Customer {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         String string = ID + " " + firstName + " " + lastName + " " + amountSpent;
         return string;
     }

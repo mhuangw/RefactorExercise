@@ -16,11 +16,11 @@ public class PreferredCustomer extends Customer {
         this.discountPercentage = discountPercentage;
     }
 
-    public void updateAmountSpent(double additionalAmountSpent){
+    public void updateAmountSpent(double additionalAmountSpent) {
         this.amountSpent += additionalAmountSpent;
     }
 
-    public void updateDiscountPercentage(){
+    public void updateDiscountPercentage() {
         double spent = getAmountSpent();
         if (spent >= 150.0 && spent < 200.0)
             setDiscountPercentage(0.05);
@@ -31,7 +31,7 @@ public class PreferredCustomer extends Customer {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         String string = ID + " " + firstName + " " + lastName + " " + amountSpent + " " + (int)(discountPercentage*100) + "%";
         return string;
     }

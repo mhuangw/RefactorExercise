@@ -15,7 +15,7 @@ public class Customer {
     }
 
     public String getFirstName() {
-        return firstName;
+        return this.firstName;
     }
 
     public void setFirstName(String firstName) {
@@ -23,7 +23,7 @@ public class Customer {
     }
 
     public String getLastName() {
-        return lastName;
+        return this.lastName;
     }
 
     public void setLastName(String lastName) {
@@ -31,7 +31,7 @@ public class Customer {
     }
 
     public int getID() {
-        return ID;
+        return this.ID;
     }
 
     public void setID(int ID) {
@@ -39,7 +39,7 @@ public class Customer {
     }
 
     public double getAmountSpent() {
-        return amountSpent;
+        return this.amountSpent;
     }
 
     public void setAmountSpent(double amountSpent) {
@@ -55,7 +55,7 @@ public class Customer {
         if (amountSpent >= 150.00) {
             isPromoted = true;
         }
-        return isPromoted;
+        return this.isPromoted;
     }
 
     @Override

@@ -45,8 +45,8 @@ public class Customer {
         this.amountSpent = amountSpent;
     }
 
-    public double updateAmountSpent(double spent){
-        this.amountSpent += spent;
+    public double updateAmountSpent(double additionalAmountSpent){
+        this.amountSpent += additionalAmountSpent;
         return this.amountSpent;
     }
 

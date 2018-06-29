@@ -5,6 +5,7 @@ public class Customer {
     private String lastName;
     private int ID;
     private double amountSpent;
+    private boolean isPromoted;
 
     public Customer(int ID, String firstName, String lastName, double amountSpent) {
         this.firstName = firstName;
@@ -51,13 +52,12 @@ public class Customer {
     }
 
     public boolean isPromoted(){
-        boolean isPromoted;
-        if (amountSpent >= 150.00)
+        if (amountSpent >= 150.00) {
             isPromoted = true;
-        else
-            isPromoted = false;
-        return  isPromoted;
+        }
+        return isPromoted;
     }
+
     @Override
     public String toString(){
         String string = ID + " " + firstName + " " + lastName + " " + amountSpent;

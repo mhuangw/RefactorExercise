@@ -1,7 +1,7 @@
 package Customer;
 
 public class PreferredCustomer extends Customer {
-    public double discountPercentage;
+    private double discountPercentage;
 
     public PreferredCustomer(int ID, String firstName, String lastName, double amountSpent, double discountPercentage) {
         super(ID, firstName, lastName, amountSpent);

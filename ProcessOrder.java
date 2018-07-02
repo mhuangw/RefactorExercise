@@ -109,18 +109,14 @@ public class ProcessOrder {
 
                 if (CustomerIsPreferred) {
                     result = processPreferred(Customers, PreferredCustomers, isPreferred, amountSpent, preferredFileName);
-                    Customers = result.Customers;
-                    PreferredCustomers = result.PreferredCustomers;
                 } else {
                     result = processCustomer(Customers, PreferredCustomers, isCustomer, amountSpent);
-                    Customers = result.Customers;
-                    PreferredCustomers = result.PreferredCustomers;
                 }
             } else {
                 result = processCustomer(Customers, PreferredCustomers, isCustomer, amountSpent);
-                PreferredCustomers = result.PreferredCustomers;
-                Customers = result.Customers;
             }
+            PreferredCustomers = result.PreferredCustomers;
+            Customers = result.Customers;
         }
     }
 

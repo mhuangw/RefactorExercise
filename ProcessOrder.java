@@ -107,11 +107,11 @@ public class ProcessOrder {
             if (preferredFileExists) {
                 int isPreferred = isPreferred(PreferredCustomers, ID);
 
-                if (isCustomer < 0 && isPreferred >= 0) {
+                if (CustomerIsPreferred) {
                     result = processPreferred(Customers, PreferredCustomers, isPreferred, amountSpent, preferredFileName);
                     Customers = result.Customers;
                     PreferredCustomers = result.PreferredCustomers;
-                } else if (isCustomer >= 0 && isPreferred < 0) {
+                } else {
                     result = processCustomer(Customers, PreferredCustomers, isCustomer, amountSpent);
                     Customers = result.Customers;
                     PreferredCustomers = result.PreferredCustomers;
@@ -121,6 +121,14 @@ public class ProcessOrder {
                 PreferredCustomers = result.PreferredCustomers;
                 Customers = result.Customers;
             }
+        }
+    }
+
+    public boolean CustomerIsPreferred() {
+        if (isCustomer < 0 && isPreferred >= 0) {
+            return true;
+        } else {
+            return false;
         }
     }
 

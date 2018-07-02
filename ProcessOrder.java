@@ -26,13 +26,13 @@ public class ProcessOrder {
         File customerFileName = new File("customer4.dat");
 
         //Read files into array of lines of string
-        String[] arrayOfCustomerLines = readFileIntoArrayOfLine(customerFileName);
-        String[] arrayOfTransactionLines = readFileIntoArrayOfLine(transactionFileName);
-        String[] arrayOfPreferredLines;
+        String[] CustomerLines = readFileIntoArrayOfLine(customerFileName);
+        String[] TransactionLines = readFileIntoArrayOfLine(transactionFileName);
+        String[] PreferredLines;
 
         //put each line into an array of object of Customer/Preferred
-        Customer[] arrayOfCustomers = readCustomerFile(arrayOfCustomerLines);
-        PreferredCustomer[] arrayOfPreferred;
+        Customer[] Customers = readCustomerFile(CustomerLines);
+        PreferredCustomer[] PreferredCustomers;
 
         Result result;
 
@@ -41,30 +41,30 @@ public class ProcessOrder {
 
         //If the preferred file exists
         if (preferredFileExists) {
-            arrayOfPreferredLines = readFileIntoArrayOfLine(preferredFileName);
-            arrayOfPreferred = readPreferredFile(arrayOfPreferredLines);
-            result = new Result(arrayOfCustomers, arrayOfPreferred);
-            for (int count = 0; count < arrayOfTransactionLines.length; count++) {
+            PreferredLines = readFileIntoArrayOfLine(preferredFileName);
+            PreferredCustomers = readPreferredFile(PreferredLines);
+            result = new Result(Customers, PreferredCustomers);
+            for (int count = 0; count < TransactionLines.length; count++) {
                 //get customer ID of the transaction
-                int ID = ID(arrayOfTransactionLines[count]);
+                int ID = ID(TransactionLines[count]);
 
                 // calculate how much the customer spent
-                double amountSpent = amountSpent(arrayOfTransactionLines[count]);
+                double amountSpent = amountSpent(TransactionLines[count]);
 
                 //get the index of the ID in customer or preferred
-                int isCustomer = isCustomer(arrayOfCustomers, ID);
-                int isPreferred = isPreferred(arrayOfPreferred, ID);
+                int isCustomer = isCustomer(Customers, ID);
+                int isPreferred = isPreferred(PreferredCustomers, ID);
 
                 //If the ID belongs to preferred, call the processPreferred function
                 if (isCustomer < 0 && isPreferred >= 0) {
-                    result = processPreferred(arrayOfCustomers, arrayOfPreferred, isPreferred, amountSpent, preferredFileName);
-                    arrayOfCustomers = result.Customers;
-                    arrayOfPreferred = result.PreferredCustomers;
+                    result = processPreferred(Customers, PreferredCustomers, isPreferred, amountSpent, preferredFileName);
+                    Customers = result.Customers;
+                    PreferredCustomers = result.PreferredCustomers;
                     // If the ID belongs to customer, call the processCustomer function
                 } else if (isCustomer >= 0 && isPreferred < 0) {
-                    result = processCustomer(arrayOfCustomers, arrayOfPreferred, isCustomer, amountSpent);
-                    arrayOfCustomers = result.Customers;
-                    arrayOfPreferred = result.PreferredCustomers;
+                    result = processCustomer(Customers, PreferredCustomers, isCustomer, amountSpent);
+                    Customers = result.Customers;
+                    PreferredCustomers = result.PreferredCustomers;
                 }
             }
             writeToCustomerFile(result.Customers, customerFileName);
@@ -75,22 +75,22 @@ public class ProcessOrder {
         else if (!preferredFileExists) {
             //If the preferred file does not exist, create one
             preferredFileName.createNewFile();
-            arrayOfPreferred = new PreferredCustomer[0];
+            PreferredCustomers = new PreferredCustomer[0];
 
-            for (int count = 0; count < arrayOfTransactionLines.length; count++) {
+            for (int count = 0; count < TransactionLines.length; count++) {
                 //get customer ID of the transaction
-                int ID = ID(arrayOfTransactionLines[count]);
+                int ID = ID(TransactionLines[count]);
 
                 // calculate how much the customer spent
-                double amountSpent = amountSpent(arrayOfTransactionLines[count]);
-                int isCustomer = isCustomer(arrayOfCustomers, ID);
+                double amountSpent = amountSpent(TransactionLines[count]);
+                int isCustomer = isCustomer(Customers, ID);
                 //Process customer
-                result = processCustomer(arrayOfCustomers, arrayOfPreferred, isCustomer, amountSpent);
-                arrayOfPreferred = result.PreferredCustomers;
-                arrayOfCustomers = result.Customers;
+                result = processCustomer(Customers, PreferredCustomers, isCustomer, amountSpent);
+                PreferredCustomers = result.PreferredCustomers;
+                Customers = result.Customers;
             }
-            writeToPreferredFile(arrayOfPreferred, preferredFileName);
-            writeToCustomerFile(arrayOfCustomers, customerFileName);
+            writeToPreferredFile(PreferredCustomers, preferredFileName);
+            writeToCustomerFile(Customers, customerFileName);
 
             //If the preferred file is empty, delete it
             if (preferredFileName.length() <= 0) {
@@ -138,7 +138,7 @@ public class ProcessOrder {
     }
 
     //This function is called when the customer ID in transaction belongs to the regular customers
-    public Result processCustomer(Customer[] arrayOfCustomer, PreferredCustomer[] arrayOfPreferred,
+    public Result processCustomer(Customer[] arrayOfCustomer, PreferredCustomer[] PreferredCustomers,
                                   int isCustomer, double amountSpent) {
 
         //Add the current amount spent into the previous amount spent
@@ -148,38 +148,38 @@ public class ProcessOrder {
         if (arrayOfCustomer[isCustomer].isPromoted()) {
 
             //move the customer from regular to preferred
-            arrayOfPreferred = moveToPreferred(arrayOfCustomer[isCustomer], arrayOfPreferred);
+            PreferredCustomers = moveToPreferred(arrayOfCustomer[isCustomer], PreferredCustomers);
             //PreferredCustomer[] PreferredCustomers = readPreferredFile(PreferredCustomersLines);
 
             //remove that customer in the regular customer array
             arrayOfCustomer = removePromotedCustomer(arrayOfCustomer, isCustomer);
             //Customer[] Customers = readCustomerFile(CustomersLines);
 
-            return new Result(arrayOfCustomer, arrayOfPreferred);
+            return new Result(arrayOfCustomer, PreferredCustomers);
         } else {
             for (int i = 0; i < arrayOfCustomer.length; i++) {
                 arrayOfCustomer[i] = arrayOfCustomer[i];
             }
-            return new Result(arrayOfCustomer, arrayOfPreferred);
+            return new Result(arrayOfCustomer, PreferredCustomers);
         }
 
     }
 
     //This function is called when the customer ID in the transaction file belongs to preferred customers
-    public Result processPreferred(Customer[] arrayOfCustomer, PreferredCustomer[] arrayOfPreferred, int isPreferred,
+    public Result processPreferred(Customer[] arrayOfCustomer, PreferredCustomer[] PreferredCustomers, int isPreferred,
                                  double amountSpent, File fileName) throws IOException {
         //get the discount percentage
-        double discount = arrayOfPreferred[isPreferred].getDiscountPercentage();
+        double discount = PreferredCustomers[isPreferred].getDiscountPercentage();
         //get the amount spent after discount
         double amountAfterDiscount = amountSpent - (amountSpent * discount);
         //update the amountSpent
-        arrayOfPreferred[isPreferred].updateAmountSpent(amountAfterDiscount);
+        PreferredCustomers[isPreferred].updateAmountSpent(amountAfterDiscount);
         //update the discount percentage
-        arrayOfPreferred[isPreferred].updateDiscountPercentage();
-        PreferredCustomer[] PreferredCustomers = new PreferredCustomer[arrayOfPreferred.length];
+        PreferredCustomers[isPreferred].updateDiscountPercentage();
+        PreferredCustomer[] PreferredCustomers = new PreferredCustomer[PreferredCustomers.length];
         //loop through the array of preferred Customer, and convert each object into string
-        for (int count = 0; count < arrayOfPreferred.length; count++) {
-            PreferredCustomers[count] = arrayOfPreferred[count];
+        for (int count = 0; count < PreferredCustomers.length; count++) {
+            PreferredCustomers[count] = PreferredCustomers[count];
         }
         return new Result(arrayOfCustomer, PreferredCustomers);
     }
@@ -213,18 +213,18 @@ public class ProcessOrder {
     }
 
     //Move to promoted customer to preferred array
-    public PreferredCustomer[] moveToPreferred(Customer customer, PreferredCustomer[] arrayOfPreferred) {
+    public PreferredCustomer[] moveToPreferred(Customer customer, PreferredCustomer[] PreferredCustomers) {
         int newArraySize;
         PreferredCustomer newPreferred = new PreferredCustomer(customer.getID(), customer.getFirstName(),
                 customer.getLastName(), customer.getAmountSpent(), 0.0);
         // get the discount percentage based on the total amountSpent
         newPreferred.updateDiscountPercentage();
         // increase the new array size by 1
-        if(arrayOfPreferred.length >= 1){
-            newArraySize = arrayOfPreferred.length + 1;
+        if(PreferredCustomers.length >= 1){
+            newArraySize = PreferredCustomers.length + 1;
             PreferredCustomer[] PreferredCustomers = new PreferredCustomer[newArraySize];
             //copy all the preferred customers into a new array
-            System.arraycopy(arrayOfPreferred, 0, PreferredCustomers, 0, newArraySize - 1);
+            System.arraycopy(PreferredCustomers, 0, PreferredCustomers, 0, newArraySize - 1);
             //copy the new promoted customer at the end of the new array
             PreferredCustomers[newArraySize - 1] = newPreferred;
             return PreferredCustomers;
@@ -281,34 +281,34 @@ public class ProcessOrder {
     }
 
     //process each line into a customer object
-    public Customer[] readCustomerFile(String[] arrayOfCustomerLines) {
-        Customer[] arrayOfCustomers = new Customer[arrayOfCustomerLines.length];
-        for (int count = 0; count < arrayOfCustomerLines.length; count++) {
-            String[] strArray = arrayOfCustomerLines[count].split(" ");
+    public Customer[] readCustomerFile(String[] CustomerLines) {
+        Customer[] Customers = new Customer[CustomerLines.length];
+        for (int count = 0; count < CustomerLines.length; count++) {
+            String[] strArray = CustomerLines[count].split(" ");
             int ID = Integer.parseInt(strArray[0]);
             String firstName = strArray[1];
             String lastName = strArray[2];
             double amountSpent = (Double.parseDouble(strArray[3]));
 
-            arrayOfCustomers[count] = new Customer(ID, firstName, lastName, amountSpent);
+            Customers[count] = new Customer(ID, firstName, lastName, amountSpent);
         }
-        return arrayOfCustomers;
+        return Customers;
     }
 
     //process each line into a preferred object
-    public static PreferredCustomer[] readPreferredFile(String[] arrayOfPreferredCustomerLines) {
-        PreferredCustomer[] arrayOfPreferred = new PreferredCustomer[arrayOfPreferredCustomerLines.length];
-        for (int count = 0; count < arrayOfPreferredCustomerLines.length; count++) {
-            String[] strArray = arrayOfPreferredCustomerLines[count].split(" ");
+    public static PreferredCustomer[] readPreferredFile(String[] PreferredCustomersCustomerLines) {
+        PreferredCustomer[] PreferredCustomers = new PreferredCustomer[PreferredCustomersCustomerLines.length];
+        for (int count = 0; count < PreferredCustomersCustomerLines.length; count++) {
+            String[] strArray = PreferredCustomersCustomerLines[count].split(" ");
             int ID = Integer.parseInt(strArray[0]);
             String firstName = strArray[1];
             String lastName = strArray[2];
             double amountSpent = Double.parseDouble(strArray[3]);
             double discountPercentage = (Double.parseDouble(strArray[4].split("%")[0]) / 100);
 
-            arrayOfPreferred[count] = new PreferredCustomer(ID, firstName, lastName, amountSpent, discountPercentage);
+            PreferredCustomers[count] = new PreferredCustomer(ID, firstName, lastName, amountSpent, discountPercentage);
         }
-        return arrayOfPreferred;
+        return PreferredCustomers;
     }
 
     //get the amountSpent for each transaction

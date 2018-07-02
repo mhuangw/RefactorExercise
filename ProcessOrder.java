@@ -25,12 +25,10 @@ public class ProcessOrder {
         File preferredFileName = new File("preferred4.dat");
         File customerFileName = new File("customer4.dat");
 
-        //Read files into array of lines of string
         String[] CustomerLines = readFileIntoArrayOfLine(customerFileName);
         String[] TransactionLines = readFileIntoArrayOfLine(transactionFileName);
         String[] PreferredLines;
 
-        //put each line into an array of object of Customer/Preferred
         Customer[] Customers = readCustomerFile(CustomerLines);
         PreferredCustomer[] PreferredCustomers;
 
@@ -47,16 +45,13 @@ public class ProcessOrder {
 
                 double amountSpent = amountSpent(TransactionLines[count]);
 
-                //get the index of the ID in customer or preferred
                 int isCustomer = isCustomer(Customers, ID);
                 int isPreferred = isPreferred(PreferredCustomers, ID);
 
-                //If the ID belongs to preferred, call the processPreferred function
                 if (isCustomer < 0 && isPreferred >= 0) {
                     result = processPreferred(Customers, PreferredCustomers, isPreferred, amountSpent, preferredFileName);
                     Customers = result.Customers;
                     PreferredCustomers = result.PreferredCustomers;
-                    // If the ID belongs to customer, call the processCustomer function
                 } else if (isCustomer >= 0 && isPreferred < 0) {
                     result = processCustomer(Customers, PreferredCustomers, isCustomer, amountSpent);
                     Customers = result.Customers;
@@ -76,7 +71,7 @@ public class ProcessOrder {
 
                 double amountSpent = amountSpent(TransactionLines[count]);
                 int isCustomer = isCustomer(Customers, ID);
-                //Process customer
+
                 result = processCustomer(Customers, PreferredCustomers, isCustomer, amountSpent);
                 PreferredCustomers = result.PreferredCustomers;
                 Customers = result.Customers;
@@ -84,15 +79,12 @@ public class ProcessOrder {
             writeToPreferredFile(PreferredCustomers, preferredFileName);
             writeToCustomerFile(Customers, customerFileName);
 
-            //If the preferred file is empty, delete it
             if (preferredFileName.length() <= 0) {
                 preferredFileName.delete();
             }
         }
     }
 
-    // Write the updated array of customer into a temporary file,
-    // then delete the old file, and use the old name to rename the new
     public void writeToCustomerFile(Customer[] array, File oldFile) throws IOException {
         String tmp = "tmp.txt";
         BufferedWriter out = new BufferedWriter((new FileWriter(tmp)));
@@ -133,7 +125,6 @@ public class ProcessOrder {
     public Result processCustomer(Customer[] arrayOfCustomer, PreferredCustomer[] PreferredCustomers,
                                   int isCustomer, double amountSpent) {
 
-        //Add the current amount spent into the previous amount spent
         arrayOfCustomer[isCustomer].updateAmountSpent(amountSpent);
 
         if (arrayOfCustomer[isCustomer].isPromoted()) {

@@ -40,24 +40,9 @@ public class ProcessOrder {
             PreferredLines = readFileIntoArrayOfLine(preferredFileName);
             PreferredCustomers = readPreferredFile(PreferredLines);
             result = new Result(Customers, PreferredCustomers);
-            for (int count = 0; count < TransactionLines.length; count++) {
-                int ID = ID(TransactionLines[count]);
 
-                double amountSpent = amountSpent(TransactionLines[count]);
+            ProcessTransactionAndGetResult(true);
 
-                int isCustomer = isCustomer(Customers, ID);
-                int isPreferred = isPreferred(PreferredCustomers, ID);
-
-                if (isCustomer < 0 && isPreferred >= 0) {
-                    result = processPreferred(Customers, PreferredCustomers, isPreferred, amountSpent, preferredFileName);
-                    Customers = result.Customers;
-                    PreferredCustomers = result.PreferredCustomers;
-                } else if (isCustomer >= 0 && isPreferred < 0) {
-                    result = processCustomer(Customers, PreferredCustomers, isCustomer, amountSpent);
-                    Customers = result.Customers;
-                    PreferredCustomers = result.PreferredCustomers;
-                }
-            }
             writeToCustomerFile(result.Customers, customerFileName);
             writeToPreferredFile(result.PreferredCustomers, preferredFileName);
         }
@@ -66,16 +51,8 @@ public class ProcessOrder {
             preferredFileName.createNewFile();
             PreferredCustomers = new PreferredCustomer[0];
 
-            for (int count = 0; count < TransactionLines.length; count++) {
-                int ID = ID(TransactionLines[count]);
+            ProcessTransactionAndGetResult(false);
 
-                double amountSpent = amountSpent(TransactionLines[count]);
-                int isCustomer = isCustomer(Customers, ID);
-
-                result = processCustomer(Customers, PreferredCustomers, isCustomer, amountSpent);
-                PreferredCustomers = result.PreferredCustomers;
-                Customers = result.Customers;
-            }
             writeToPreferredFile(PreferredCustomers, preferredFileName);
             writeToCustomerFile(Customers, customerFileName);
 
@@ -119,6 +96,32 @@ public class ProcessOrder {
         File newFile = new File(tmp);
         newFile.renameTo(oldFile);
 
+    }
+
+    public void ProcessTransactionAndGetResult(boolean preferredFileExists) {
+        for (int count = 0; count < TransactionLines.length; count++) {
+            int ID = getCustomerID(TransactionLines[count]);
+            double amountSpent = amountSpent(TransactionLines[count]);
+            int isCustomer = isCustomer(Customers, ID);
+
+            if (preferredFileExists) {
+                int isPreferred = isPreferred(PreferredCustomers, ID);
+
+                if (isCustomer < 0 && isPreferred >= 0) {
+                    result = processPreferred(Customers, PreferredCustomers, isPreferred, amountSpent, preferredFileName);
+                    Customers = result.Customers;
+                    PreferredCustomers = result.PreferredCustomers;
+                } else if (isCustomer >= 0 && isPreferred < 0) {
+                    result = processCustomer(Customers, PreferredCustomers, isCustomer, amountSpent);
+                    Customers = result.Customers;
+                    PreferredCustomers = result.PreferredCustomers;
+                }
+            } else {
+                result = processCustomer(Customers, PreferredCustomers, isCustomer, amountSpent);
+                PreferredCustomers = result.PreferredCustomers;
+                Customers = result.Customers;
+            }
+        }
     }
 
     //This function is called when the customer ID in transaction belongs to the regular customers

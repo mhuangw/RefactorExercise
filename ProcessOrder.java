@@ -103,18 +103,14 @@ public class ProcessOrder {
             int ID = getCustomerID(TransactionLines[count]);
             double amountSpent = amountSpent(TransactionLines[count]);
             int isCustomer = isCustomer(Customers, ID);
+            int isPreferred = isPreferred(PreferredCustomers, ID);
 
-            if (preferredFileExists) {
-                int isPreferred = isPreferred(PreferredCustomers, ID);
-
-                if (CustomerIsPreferred) {
-                    result = processPreferred(Customers, PreferredCustomers, isPreferred, amountSpent, preferredFileName);
-                } else {
-                    result = processCustomer(Customers, PreferredCustomers, isCustomer, amountSpent);
-                }
+            if (CustomerIsPreferred) {
+                result = processPreferred(Customers, PreferredCustomers, isPreferred, amountSpent, preferredFileName);
             } else {
                 result = processCustomer(Customers, PreferredCustomers, isCustomer, amountSpent);
             }
+            
             PreferredCustomers = result.PreferredCustomers;
             Customers = result.Customers;
         }

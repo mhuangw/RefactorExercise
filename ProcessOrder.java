@@ -8,7 +8,6 @@ import java.util.List;
 import static java.lang.Math.pow;
 
 public class ProcessOrder {
-    // Result class has PreferredCustomersLines and Customers Lines
     protected class Result {
         protected PreferredCustomer[] PreferredCustomers;
         protected Customer[] Customers;
@@ -20,7 +19,6 @@ public class ProcessOrder {
     }
 
     public void run() throws IOException {
-        //Wrap file name into File
         File transactionFileName = new File("orders4.dat");
         File preferredFileName = new File("preferred4.dat");
         File customerFileName = new File("customer4.dat");
@@ -110,7 +108,7 @@ public class ProcessOrder {
             } else {
                 result = processCustomer(Customers, PreferredCustomers, isCustomer, amountSpent);
             }
-            
+
             PreferredCustomers = result.PreferredCustomers;
             Customers = result.Customers;
         }
@@ -124,7 +122,6 @@ public class ProcessOrder {
         }
     }
 
-    //This function is called when the customer ID in transaction belongs to the regular customers
     public Result processCustomer(Customer[] arrayOfCustomer, PreferredCustomer[] PreferredCustomers,
                                   int isCustomer, double amountSpent) {
 
@@ -143,7 +140,6 @@ public class ProcessOrder {
 
     }
 
-    //This function is called when the customer ID in the transaction file belongs to preferred customers
     public Result processPreferred(Customer[] arrayOfCustomer, PreferredCustomer[] PreferredCustomers, int isPreferred,
                                  double amountSpent, File fileName) throws IOException {
         double discount = PreferredCustomers[isPreferred].getDiscountPercentage();

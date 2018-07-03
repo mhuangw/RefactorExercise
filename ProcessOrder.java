@@ -96,7 +96,7 @@ public class ProcessOrder {
 
     }
 
-    public void ProcessTransactionAndGetResult(boolean preferredFileExists) {
+    public void processTransactionAndGetResult(boolean preferredFileExists) {
         for (int count = 0; count < TransactionLines.length; count++) {
             int ID = getCustomerID(TransactionLines[count]);
             double amountSpent = amountSpent(TransactionLines[count]);
@@ -114,7 +114,7 @@ public class ProcessOrder {
         }
     }
 
-    public boolean CustomerIsPreferred() {
+    public boolean customerIsPreferred() {
         if (isCustomer < 0 && isPreferred >= 0) {
             return true;
         } else {

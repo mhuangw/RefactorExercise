@@ -64,8 +64,8 @@ public class ProcessOrder {
         for (int count = 0; count < TransactionLines.length; count++) {
             int ID = getCustomerID(TransactionLines[count]);
             double amountSpent = amountSpent(TransactionLines[count]);
-            int isCustomer = isCustomer(Customers, ID);
-            int isPreferred = isPreferred(PreferredCustomers, ID);
+            int isCustomer = CustomerStatus.isCustomer(Customers, ID);
+            int isPreferred = CustomerStatus.isPreferred(PreferredCustomers, ID);
 
             if (CustomerIsPreferred) {
                 result = ProcessUser.processPreferred(Customers, PreferredCustomers, isPreferred, amountSpent, preferredFileName);
@@ -126,32 +126,6 @@ public class ProcessOrder {
             PreferredCustomers[0] = newPreferred;
             return PreferredCustomers;
         }
-    }
-
-    public int isCustomer(Customer[] arrayOfCustomer, int ID) {
-        int isCustomer = -1;
-        int c = 0;
-
-        do{
-            if (ID == arrayOfCustomer[c].getID())
-                isCustomer = c;
-            else isCustomer = -1;
-            c++;
-        } while (isCustomer == -1 && c < arrayOfCustomer.length);
-        return isCustomer;
-    }
-
-    public int isPreferred(PreferredCustomer[] arrayOfCustomer, int ID) {
-        int isCustomer = -1;
-        int c = 0;
-
-        while (isCustomer == -1 && c < arrayOfCustomer.length) {
-            if (ID == arrayOfCustomer[c].getID())
-                isCustomer = c;
-            else isCustomer = -1;
-            c++;
-        }
-        return isCustomer;
     }
 
     public String[] readFileIntoArrayOfLine(File filename) throws IOException {

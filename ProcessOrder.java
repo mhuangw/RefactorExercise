@@ -68,9 +68,9 @@ public class ProcessOrder {
             int isPreferred = isPreferred(PreferredCustomers, ID);
 
             if (CustomerIsPreferred) {
-                result = processPreferred(Customers, PreferredCustomers, isPreferred, amountSpent, preferredFileName);
+                result = ProcessUser.processPreferred(Customers, PreferredCustomers, isPreferred, amountSpent, preferredFileName);
             } else {
-                result = processCustomer(Customers, PreferredCustomers, isCustomer, amountSpent);
+                result = ProcessUser.processCustomer(Customers, PreferredCustomers, isCustomer, amountSpent);
             }
 
             PreferredCustomers = result.PreferredCustomers;
@@ -84,36 +84,6 @@ public class ProcessOrder {
         } else {
             return false;
         }
-    }
-
-    public Result processCustomer(Customer[] arrayOfCustomer, PreferredCustomer[] PreferredCustomers,
-                                  int isCustomer, double amountSpent) {
-        arrayOfCustomer[isCustomer].updateAmountSpent(amountSpent);
-
-        if (arrayOfCustomer[isCustomer].isPromoted()) {
-            PreferredCustomers = moveToPreferred(arrayOfCustomer[isCustomer], PreferredCustomers);
-            arrayOfCustomer = removePromotedCustomer(arrayOfCustomer, isCustomer);
-            return new Result(arrayOfCustomer, PreferredCustomers);
-        } else {
-            for (int i = 0; i < arrayOfCustomer.length; i++) {
-                arrayOfCustomer[i] = arrayOfCustomer[i];
-            }
-            return new Result(arrayOfCustomer, PreferredCustomers);
-        }
-    }
-
-    public Result processPreferred(Customer[] arrayOfCustomer, PreferredCustomer[] PreferredCustomers, int isPreferred,
-                                 double amountSpent, File fileName) throws IOException {
-        double discount = PreferredCustomers[isPreferred].getDiscountPercentage();
-        double amountAfterDiscount = amountSpent - (amountSpent * discount);
-        PreferredCustomers[isPreferred].updateAmountSpent(amountAfterDiscount);
-        PreferredCustomers[isPreferred].updateDiscountPercentage();
-        PreferredCustomer[] PreferredCustomers = new PreferredCustomer[PreferredCustomers.length];
-
-        for (int count = 0; count < PreferredCustomers.length; count++) {
-            PreferredCustomers[count] = PreferredCustomers[count];
-        }
-        return new Result(arrayOfCustomer, PreferredCustomers);
     }
 
     public Customer[] removePromotedCustomer(Customer[] arrayOfCustomer, int isCustomer) {

@@ -1,11 +1,11 @@
-public class ProcessUser {
+public class ProcessUser extends ProcessOrder {
 	public static Result processCustomer(Customer[] arrayOfCustomer, PreferredCustomer[] PreferredCustomers,
                                   int isCustomer, double amountSpent) {
         arrayOfCustomer[isCustomer].updateAmountSpent(amountSpent);
 
         if (arrayOfCustomer[isCustomer].isPromoted()) {
-            PreferredCustomers = moveToPreferred(arrayOfCustomer[isCustomer], PreferredCustomers);
-            arrayOfCustomer = removePromotedCustomer(arrayOfCustomer, isCustomer);
+            PreferredCustomers = super.moveToPreferred(arrayOfCustomer[isCustomer], PreferredCustomers);
+            arrayOfCustomer = super.removePromotedCustomer(arrayOfCustomer, isCustomer);
             return new Result(arrayOfCustomer, PreferredCustomers);
         } else {
             for (int i = 0; i < arrayOfCustomer.length; i++) {

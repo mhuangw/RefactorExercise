@@ -23,8 +23,8 @@ public class ProcessOrder {
         File preferredFileName = new File("preferred4.dat");
         File customerFileName = new File("customer4.dat");
 
-        String[] CustomerLines = readFileIntoArrayOfLine(customerFileName);
-        String[] TransactionLines = readFileIntoArrayOfLine(transactionFileName);
+        String[] CustomerLines = ReadFile.readFileIntoArrayOfLine(customerFileName);
+        String[] TransactionLines = ReadFile.readFileIntoArrayOfLine(transactionFileName);
         String[] PreferredLines;
 
         Customer[] Customers = ReadFile.readCustomerFile(CustomerLines);
@@ -35,7 +35,7 @@ public class ProcessOrder {
         boolean preferredFileExists = preferredFileName.exists();
 
         if (preferredFileExists) {
-            PreferredLines = readFileIntoArrayOfLine(preferredFileName);
+            PreferredLines = ReadFile.readFileIntoArrayOfLine(preferredFileName);
             PreferredCustomers = ReadFile.readPreferredFile(PreferredLines);
             result = new Result(Customers, PreferredCustomers);
 
@@ -126,20 +126,6 @@ public class ProcessOrder {
             PreferredCustomers[0] = newPreferred;
             return PreferredCustomers;
         }
-    }
-
-    public String[] readFileIntoArrayOfLine(File filename) throws IOException {
-        FileReader fileReader = new FileReader(filename);
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
-        List<String> lines = new ArrayList<>();
-        String line;
-
-        while ((line = bufferedReader.readLine()) != null) {
-            lines.add(line);
-        }
-
-        bufferedReader.close();
-        return lines.toArray(new String[lines.size()]);
     }
 
     public static double amountSpent(String line) {

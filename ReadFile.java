@@ -1,4 +1,18 @@
 public class ReadFile {
+    public static String[] readFileIntoArrayOfLine(File filename) throws IOException {
+        FileReader fileReader = new FileReader(filename);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        List<String> lines = new ArrayList<>();
+        String line;
+
+        while ((line = bufferedReader.readLine()) != null) {
+            lines.add(line);
+        }
+
+        bufferedReader.close();
+        return lines.toArray(new String[lines.size()]);
+    }
+
     public static Customer[] readCustomerFile(String[] CustomerLines) {
         Customer[] Customers = new Customer[CustomerLines.length];
         for (int count = 0; count < CustomerLines.length; count++) {

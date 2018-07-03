@@ -63,37 +63,35 @@ public class ProcessOrder {
     public void writeToCustomerFile(Customer[] array, File oldFile) throws IOException {
         String tmp = "tmp.txt";
         BufferedWriter out = new BufferedWriter((new FileWriter(tmp)));
+
         for (int count = 0; count < array.length; count++) {
             out.write(array[count].toString());
             if(count != array.length - 1)
                 out.write("\n");
         }
+
         out.flush();
         out.close();
-
         oldFile.delete();
-
         File newFile = new File(tmp);
         newFile.renameTo(oldFile);
-
     }
 
     public void writeToPreferredFile(PreferredCustomer[] array, File oldFile) throws IOException {
         String tmp = "tmp.txt";
         BufferedWriter out = new BufferedWriter((new FileWriter(tmp)));
+
         for (int count = 0; count < array.length; count++) {
             out.write(array[count].toString());
             if(count != array.length - 1)
                 out.write("\n");
         }
+        
         out.flush();
         out.close();
-
         oldFile.delete();
-
         File newFile = new File(tmp);
         newFile.renameTo(oldFile);
-
     }
 
     public void processTransactionAndGetResult(boolean preferredFileExists) {
@@ -124,7 +122,6 @@ public class ProcessOrder {
 
     public Result processCustomer(Customer[] arrayOfCustomer, PreferredCustomer[] PreferredCustomers,
                                   int isCustomer, double amountSpent) {
-
         arrayOfCustomer[isCustomer].updateAmountSpent(amountSpent);
 
         if (arrayOfCustomer[isCustomer].isPromoted()) {
@@ -137,7 +134,6 @@ public class ProcessOrder {
             }
             return new Result(arrayOfCustomer, PreferredCustomers);
         }
-
     }
 
     public Result processPreferred(Customer[] arrayOfCustomer, PreferredCustomer[] PreferredCustomers, int isPreferred,
@@ -147,6 +143,7 @@ public class ProcessOrder {
         PreferredCustomers[isPreferred].updateAmountSpent(amountAfterDiscount);
         PreferredCustomers[isPreferred].updateDiscountPercentage();
         PreferredCustomer[] PreferredCustomers = new PreferredCustomer[PreferredCustomers.length];
+
         for (int count = 0; count < PreferredCustomers.length; count++) {
             PreferredCustomers[count] = PreferredCustomers[count];
         }
@@ -178,7 +175,9 @@ public class ProcessOrder {
         int newArraySize;
         PreferredCustomer newPreferred = new PreferredCustomer(customer.getID(), customer.getFirstName(),
                 customer.getLastName(), customer.getAmountSpent(), 0.0);
+
         newPreferred.updateDiscountPercentage();
+
         if(PreferredCustomers.length >= 1){
             newArraySize = PreferredCustomers.length + 1;
             PreferredCustomer[] PreferredCustomers = new PreferredCustomer[newArraySize];
@@ -196,19 +195,20 @@ public class ProcessOrder {
     public int isCustomer(Customer[] arrayOfCustomer, int ID) {
         int isCustomer = -1;
         int c = 0;
+
         do{
             if (ID == arrayOfCustomer[c].getID())
                 isCustomer = c;
             else isCustomer = -1;
             c++;
         } while (isCustomer == -1 && c < arrayOfCustomer.length);
-
         return isCustomer;
     }
 
     public int isPreferred(PreferredCustomer[] arrayOfCustomer, int ID) {
         int isCustomer = -1;
         int c = 0;
+
         while (isCustomer == -1 && c < arrayOfCustomer.length) {
             if (ID == arrayOfCustomer[c].getID())
                 isCustomer = c;
@@ -223,9 +223,11 @@ public class ProcessOrder {
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         List<String> lines = new ArrayList<>();
         String line;
+
         while ((line = bufferedReader.readLine()) != null) {
             lines.add(line);
         }
+
         bufferedReader.close();
         return lines.toArray(new String[lines.size()]);
     }
@@ -246,6 +248,7 @@ public class ProcessOrder {
 
     public static PreferredCustomer[] readPreferredFile(String[] PreferredCustomersCustomerLines) {
         PreferredCustomer[] PreferredCustomers = new PreferredCustomer[PreferredCustomersCustomerLines.length];
+
         for (int count = 0; count < PreferredCustomersCustomerLines.length; count++) {
             String[] strArray = PreferredCustomersCustomerLines[count].split(" ");
             int ID = Integer.parseInt(strArray[0]);
@@ -268,7 +271,6 @@ public class ProcessOrder {
         double squareInchPrice = Double.parseDouble(strArray[5]);
         int quantity = Integer.parseInt(strArray[6]);
         double amountSpent = priceCalculation(radius, height, ounces, ouncePrice, squareInchPrice, quantity);
-
         return amountSpent;
     }
 
